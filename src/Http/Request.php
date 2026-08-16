@@ -48,8 +48,30 @@ final class Request
     {
         $uri = (string) ($this->server['REQUEST_URI'] ?? '/');
         $path = parse_url($uri, PHP_URL_PATH);
+        $path = $path === false || $path === null || $path === '' ? '/' : rawurldecode($path);
 
-        return $path === false || $path === null || $path === '' ? '/' : rawurldecode($path);
+        $script = str_replace('\\', '/', (string) ($this->server['SCRIPT_NAME'] ?? ''));
+        $directory = str_replace('\\', '/', dirname($script));
+
+        if ($directory !== '/' && $directory !== '.' && $directory !== '') {
+            if (str_ends_with($directory, '/public')) {
+                $directory = substr($directory, 0, -strlen('/public'));
+            }
+
+            $directory = rtrim($directory, '/');
+
+            if ($directory !== '' && ($path === $directory || str_starts_with($path, $directory . '/'))) {
+                $path = substr($path, strlen($directory)) ?: '/';
+            }
+        }
+
+        if (str_contains($script, '/public/index.php') && ($path === '/public' || str_starts_with($path, '/public/'))) {
+            $path = substr($path, strlen('/public')) ?: '/';
+        }
+
+        $path = '/' . trim($path, '/');
+
+        return $path === '/' ? '/' : rtrim($path, '/');
     }
 
     public function url(): string

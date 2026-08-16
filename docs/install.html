@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>نصب و راه‌اندازی · Lite MVC</title>
+    <title>Install · Lite MVC</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Vazirmatn:wght@400;600;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/docs.css">
 </head>
 <body>
@@ -14,41 +14,53 @@
     <div class="layout">
         <aside class="sidebar" id="sidebar"></aside>
         <main class="content">
-            <p class="eyebrow">شروع</p>
-<h1>نصب و راه‌اندازی</h1>
-<p class="lede">پیش‌نیاز: PHP 8.2 به‌بعد با PDO SQLite یا MySQL، و Composer.</p>
+            <p class="eyebrow">Getting started</p>
+<h1>Install</h1>
+<p class="lede">Requires PHP 8.2+ with PDO SQLite or MySQL, and Composer.</p>
 
-<h2>۱. کلون و وابستگی‌ها</h2>
+<h2>1. Create a project</h2>
+<pre><code>composer create-project phpmvc/lite my-app
+cd my-app</code></pre>
+<p>Or clone the repository:</p>
 <pre><code>git clone git@github.com:mortenaho/php-mvc-lite.git
 cd php-mvc-lite
 composer install
-cp .env.example .env</code></pre>
+cp .env.example .env
+php lite key:generate</code></pre>
 
-<h2>۲. مهاجرت</h2>
-<p>پیش‌فرض SQLite است و فایل دیتابیس در <code>storage/database/app.sqlite</code> ساخته می‌شود.</p>
+<h2>2. Migrate</h2>
+<p>SQLite is the default. The database file is created at <code>storage/database/app.sqlite</code>.</p>
 <pre><code>php lite migrate</code></pre>
 
-<h2>۳. سرور توسعه</h2>
+<h2>3. Development server</h2>
 <pre><code>php lite serve</code></pre>
-<p>مرورگر را روی <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a> باز کنید. پورت را می‌توانید عوض کنید:</p>
+<p>Open <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a>. To change the port:</p>
 <pre><code>php lite serve --port=8080</code></pre>
 
 <h2>Apache</h2>
-<p>Document Root را روی پوشه <code>public</code> بگذارید. فایل <code>public/.htaccess</code> همه مسیرها را به Front Controller می‌فرستد.</p>
+<p>If you can change the document root, point it at the <code>public</code> directory. <code>public/.htaccess</code> sends all routes to the front controller.</p>
+
+<h2>Hosts that cannot change the document root</h2>
+<p>On many shared hosts the document root is locked to <code>public_html</code>. Upload the whole project into that folder.</p>
+<p>The root <code>.htaccess</code> rewrites every request into <code>public</code>, serves static files from <code>public/assets</code>, and blocks direct access to <code>.env</code>, <code>vendor</code>, <code>src</code>, and <code>storage</code>. If <code>mod_rewrite</code> is unavailable, the root <code>index.php</code> still boots the home page.</p>
+<p>Set the real site URL in <code>.env</code>:</p>
+<pre><code>APP_URL=https://example.com</code></pre>
+<p>If the project lives in a subdirectory:</p>
+<pre><code>APP_URL=https://example.com/my-app</code></pre>
 
 <h2>MySQL</h2>
-<p>در <code>.env</code>:</p>
+<p>In <code>.env</code>:</p>
 <pre><code>DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=lite
 DB_USERNAME=root
 DB_PASSWORD=secret</code></pre>
-<p>سپس دوباره <code>php lite migrate</code>.</p>
+<p>Then run <code>php lite migrate</code> again.</p>
 
-<div class="note">در production مقدار <code>APP_DEBUG=false</code> بگذارید تا جزئیات خطا نشان داده نشود و Blade قالب را کش کند.</div>
+<div class="note">In production set <code>APP_DEBUG=false</code> so error details stay hidden and Blade caches compiled templates.</div>
             <nav class="pager">
-                <a href="index.html">→ معرفی</a><a href="tutorial.html">آموزش عملی ←</a>
+                <a href="index.html">← Introduction</a><a href="tutorial.html">Tutorial →</a>
             </nav>
         </main>
     </div>

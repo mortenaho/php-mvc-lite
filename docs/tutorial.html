@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>آموزش عملی · Lite MVC</title>
+    <title>Tutorial · Lite MVC</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Vazirmatn:wght@400;600;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/docs.css">
 </head>
 <body>
@@ -14,13 +14,13 @@
     <div class="layout">
         <aside class="sidebar" id="sidebar"></aside>
         <main class="content">
-            <p class="eyebrow">مسیر یادگیری</p>
-<h1>آموزش عملی: یک منبع CRUD</h1>
-<p class="lede">همین الگوی نوشته‌ها را برای منبع خودتان تکرار کنید. اینجا یک موجودیت <code>Article</code> می‌سازیم.</p>
+            <p class="eyebrow">Learning path</p>
+<h1>Tutorial: a CRUD resource</h1>
+<p class="lede">Reuse the posts pattern for your own resource. This walkthrough builds an <code>Article</code> entity.</p>
 
-<h2>گام ۱ — مدل</h2>
+<h2>Step 1 — Model</h2>
 <pre><code>php lite make:model Article</code></pre>
-<p>فایل <code>app/Models/Article.php</code> را باز کنید و فیلدهای قابل‌نوشتن را مشخص کنید:</p>
+<p>Open <code>app/Models/Article.php</code> and set the fillable fields:</p>
 <pre><code>namespace App\Models;
 
 final class Article extends Model
@@ -28,8 +28,8 @@ final class Article extends Model
     protected $fillable = ['title', 'body'];
 }</code></pre>
 
-<h2>گام ۲ — مهاجرت</h2>
-<p>فایلی شبیه <code>database/migrations/2024_01_02_000001_create_articles_table.php</code> بسازید:</p>
+<h2>Step 2 — Migration</h2>
+<p>Create a file such as <code>database/migrations/2024_01_02_000001_create_articles_table.php</code>:</p>
 <pre><code>return new class {
     public function up(Capsule $db): void
     {
@@ -48,13 +48,13 @@ final class Article extends Model
 };</code></pre>
 <pre><code>php lite migrate</code></pre>
 
-<h2>گام ۳ — کنترلر</h2>
+<h2>Step 3 — Controller</h2>
 <pre><code>php lite make:controller ArticleController</code></pre>
-<p>لیست و ذخیره را این‌طور بنویسید:</p>
+<p>List and store can look like this:</p>
 <pre><code>public function index(): Response
 {
     return $this-&gt;view('articles.index', [
-        'title' =&gt; 'مقاله‌ها',
+        'title' =&gt; 'Articles',
         'articles' =&gt; Article::query()-&gt;latest()-&gt;get(),
     ]);
 }
@@ -71,32 +71,32 @@ public function store(Request $request): Response
     return $this-&gt;redirect('/articles/' . $article-&gt;id);
 }</code></pre>
 
-<h2>گام ۴ — مسیر</h2>
-<p>در <code>routes/web.php</code>:</p>
+<h2>Step 4 — Routes</h2>
+<p>In <code>routes/web.php</code>:</p>
 <pre><code>$router-&gt;get('/articles', [ArticleController::class, 'index']);
 $router-&gt;get('/articles/create', [ArticleController::class, 'create']);
 $router-&gt;post('/articles', [ArticleController::class, 'store']);
 $router-&gt;get('/articles/{id}', [ArticleController::class, 'show']);</code></pre>
 
-<h2>گام ۵ — قالب Blade</h2>
-<p>فایل <code>resources/views/articles/index.blade.php</code>:</p>
+<h2>Step 5 — Blade template</h2>
+<p>Create <code>resources/views/articles/index.blade.php</code>:</p>
 <pre><code>@extends('layouts.app')
 
 @section('content')
-&lt;h1&gt;مقاله‌ها&lt;/h1&gt;
+&lt;h1&gt;Articles&lt;/h1&gt;
 @foreach($articles as $article)
     &lt;a href="{{ url('/articles/' . $article-&gt;id) }}"&gt;{{ $article-&gt;title }}&lt;/a&gt;
 @endforeach
 @endsection</code></pre>
 
-<div class="note">برای فرم POST حتماً <code>@csrf</code> بگذارید؛ وگرنه میدل‌ویر CSRF درخواست را با ۴۰۳ رد می‌کند.</div>
+<div class="note">Always include <code>@csrf</code> on POST forms, or the CSRF middleware will reject the request with 403.</div>
 
-<h2>گام ۶ — تست</h2>
+<h2>Step 6 — Try it</h2>
 <pre><code>php lite routes
 php lite serve</code></pre>
-<p>مسیر <code>/articles</code> باید لیست را نشان بدهد. اگر ۴۰۴ دیدید، ترتیب مسیرها را چک کنید: <code>/articles/create</code> باید قبل از <code>/articles/{id}</code> ثبت شود.</p>
+<p><code>/articles</code> should list records. If you get a 404, check route order: register <code>/articles/create</code> before <code>/articles/{id}</code>.</p>
             <nav class="pager">
-                <a href="install.html">→ نصب</a><a href="architecture.html">معماری ←</a>
+                <a href="install.html">← Install</a><a href="architecture.html">Architecture →</a>
             </nav>
         </main>
     </div>

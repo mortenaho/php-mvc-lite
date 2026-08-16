@@ -11,12 +11,12 @@ foreach ($pages as $file => $page) {
 
     $pager = '';
     if ($prev) {
-        $pager .= '<a href="' . $prev[0] . '">→ ' . $prev[1] . '</a>';
+        $pager .= '<a href="' . $prev[0] . '">← ' . $prev[1] . '</a>';
     } else {
         $pager .= '<span></span>';
     }
     if ($next) {
-        $pager .= '<a href="' . $next[0] . '">' . $next[1] . ' ←</a>';
+        $pager .= '<a href="' . $next[0] . '">' . $next[1] . ' →</a>';
     }
 
     $html = str_replace(

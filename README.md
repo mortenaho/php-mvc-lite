@@ -1,64 +1,81 @@
 # Lite MVC
 
-فریم‌ورک MVC سبک برای PHP با ساختار لایه‌ای، تزریق وابستگی، Eloquent و Blade.
+A lightweight PHP MVC framework with a layered structure, dependency injection, Eloquent, and Blade.
 
-**مستندات و آموزش:** [mortenaho.github.io/php-mvc-lite](https://mortenaho.github.io/php-mvc-lite/)
+**Docs:** [mortenaho.github.io/php-mvc-lite](https://mortenaho.github.io/php-mvc-lite/)
 
-هسته عمداً کوچک است. کار سنگین داده و قالب به کتابخانه‌های بالغ سپرده شده تا هم سبک بماند، هم در تولید قابل اعتماد باشد.
+The core is intentionally small. Heavy lifting for data and templates is left to mature libraries so the framework stays light and production-ready.
 
-## پشته
+## Stack
 
-| لایه | انتخاب | دلیل |
+| Layer | Choice | Why |
 | --- | --- | --- |
-| HTTP / Routing | Front Controller + FastRoute | مسیرهای کامپایل‌شده و سریع |
-| Container | PSR-11 با autowiring | کنترلر و میدل‌ویر با constructor injection |
-| ORM | Illuminate Database (Eloquent) | مدل، مهاجرت، Query Builder، رابطه |
-| View | Illuminate View (Blade) | همان سینتکس لاراول، کامپایل و کش قالب |
-| Config | `.env` + فایل‌های PHP | جداسازی محیط از کد |
+| HTTP / Routing | Front Controller + FastRoute | Compiled, fast route matching |
+| Container | PSR-11 with autowiring | Constructor injection for controllers and middleware |
+| ORM | Illuminate Database (Eloquent) | Models, migrations, query builder, relationships |
+| View | Illuminate View (Blade) | Laravel Blade syntax, compiled and cached |
+| Config | `.env` + PHP files | Environment kept out of code |
 
-## ساختار
+## Layout
 
 ```
-app/                 کد اپلیکیشن (Controllers, Models)
-bootstrap/           ساخت Application و ثبت مسیرها
-config/              تنظیمات app / database / view
-database/migrations  مهاجرت‌های Eloquent
-public/              Document root و Front Controller
-resources/views      قالب‌های Blade (layouts, components, pages)
-routes/web.php       تعریف مسیرها
-src/                 هسته فریم‌ورک (Lite)
-storage/             کش Blade، لاگ، سشن، SQLite
+app/                 Application code (Controllers, Models)
+bootstrap/           Builds the Application and registers routes
+config/              app / database / view settings
+database/migrations  Eloquent migrations
+public/              Document root and front controller
+resources/views      Blade templates (layouts, components, pages)
+routes/web.php       Route definitions
+src/                 Framework core (Lite)
+storage/             Blade cache, logs, sessions, SQLite
 ```
 
-جریان درخواست:
+Request flow:
 
-`public/index.php` → `Kernel` → میدل‌ویر سراسری → Router → کنترلر → Response
+`public/index.php` → `Kernel` → global middleware → Router → Controller → Response
 
-## اصول طراحی
+## Design
 
-- **SRP**: هر کلاس یک مسئولیت (Router, Kernel, ViewFactory, Migrator)
-- **DIP**: وابستگی به Container و اینترفیس میدل‌ویر، نه به پیاده‌سازی سفت
-- **OCP**: افزودن میدل‌ویر، مسیر و سرویس بدون دستکاری هسته
-- **Controller نازک**: اعتبارسنجی و پاسخ HTTP؛ منطق داده در Eloquent Model
-- **View امن**: `{{ $value }}` در Blade به‌صورت پیش‌فرض HTML را escape می‌کند
+- **SRP**: one responsibility per class (Router, Kernel, ViewFactory, Migrator)
+- **DIP**: depend on the Container and middleware interface, not a hard-wired implementation
+- **OCP**: add middleware, routes, and services without changing the core
+- **Thin controllers**: HTTP and validation here; data logic on Eloquent models
+- **Safe views**: `{{ $value }}` HTML-escapes by default in Blade
 
-## نصب
+## Install
+
+Create a new project with Composer:
 
 ```bash
-composer install
-cp .env.example .env
+composer create-project phpmvc/lite my-app
+cd my-app
 php lite migrate
 php lite serve
 ```
 
-سپس [http://127.0.0.1:8000](http://127.0.0.1:8000) را باز کنید.
+Or clone the repository:
 
-برای Apache، `public` را Document Root بگذارید. `.htaccess` مسیرها را به `index.php` می‌فرستد.
+```bash
+composer install
+cp .env.example .env
+php lite key:generate
+php lite migrate
+php lite serve
+```
+
+Then open [http://127.0.0.1:8000](http://127.0.0.1:8000).
+
+## Shared hosting
+
+If you can change the document root, point it at `public`.
+
+If the host locks the document root (for example `public_html`), upload the whole project there. The root `.htaccess` rewrites every request into `public` and blocks access to `.env`, `vendor`, and `src`. Set `APP_URL` in `.env` to the real site URL.
 
 ## CLI
 
 ```bash
 php lite serve --port=8000
+php lite key:generate
 php lite migrate
 php lite migrate:rollback
 php lite migrate:fresh
@@ -67,7 +84,7 @@ php lite make:model Article
 php lite routes
 ```
 
-## نمونه کنترلر
+## Controller example
 
 ```php
 final class PostController extends Controller
@@ -86,7 +103,7 @@ final class PostController extends Controller
 }
 ```
 
-## قالب Blade
+## Blade template
 
 ```blade
 @extends('layouts.app')
@@ -100,11 +117,11 @@ final class PostController extends Controller
 @endsection
 ```
 
-در production قالب‌های کامپایل‌شده در `storage/cache/blade` کش می‌شوند.
+In production, compiled templates are cached in `storage/cache/blade`.
 
-## دیتابیس
+## Database
 
-پیش‌فرض SQLite است (`storage/database/app.sqlite`). برای MySQL در `.env`:
+SQLite is the default (`storage/database/app.sqlite`). For MySQL, set `.env`:
 
 ```
 DB_CONNECTION=mysql
@@ -114,4 +131,4 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-سپس `php lite migrate`.
+Then run `php lite migrate`.

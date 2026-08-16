@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>خط فرمان · Lite MVC</title>
+    <title>CLI · Lite MVC</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Vazirmatn:wght@400;600;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/docs.css">
 </head>
 <body>
@@ -14,13 +14,14 @@
     <div class="layout">
         <aside class="sidebar" id="sidebar"></aside>
         <main class="content">
-            <p class="eyebrow">لایه‌ها</p>
-<h1>خط فرمان</h1>
-<p>ورود CLI فایل <code>lite</code> در ریشه پروژه است.</p>
+            <p class="eyebrow">Layers</p>
+<h1>Command line</h1>
+<p>The CLI entry point is the <code>lite</code> file in the project root.</p>
 <pre><code>php lite help</code></pre>
 
-<h2>دستورها</h2>
+<h2>Commands</h2>
 <pre><code>php lite serve [--host=127.0.0.1] [--port=8000]
+php lite key:generate
 php lite migrate
 php lite migrate:rollback
 php lite migrate:fresh
@@ -28,9 +29,9 @@ php lite make:controller PostController
 php lite make:model Post
 php lite routes</code></pre>
 
-<p><code>migrate:fresh</code> همه جدول‌ها را حذف می‌کند و مهاجرت‌ها را از نو اجرا می‌کند. برای محیط توسعه است، نه production.</p>
+<p><code>migrate:fresh</code> drops every table and re-runs migrations. Use it in development, not in production.</p>
             <nav class="pager">
-                <a href="validation.html">→ اعتبارسنجی</a>
+                <a href="validation.html">← Validation</a>
             </nav>
         </main>
     </div>

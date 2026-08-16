@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>مسیریابی · Lite MVC</title>
+    <title>Routing · Lite MVC</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Vazirmatn:wght@400;600;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/docs.css">
 </head>
 <body>
@@ -14,11 +14,11 @@
     <div class="layout">
         <aside class="sidebar" id="sidebar"></aside>
         <main class="content">
-            <p class="eyebrow">هسته</p>
-<h1>مسیریابی</h1>
-<p>مسیرها در <code>routes/web.php</code> ثبت می‌شوند. موتور تطبیق <strong>FastRoute</strong> است.</p>
+            <p class="eyebrow">Core</p>
+<h1>Routing</h1>
+<p>Routes are registered in <code>routes/web.php</code>. Matching is handled by <strong>FastRoute</strong>.</p>
 
-<h2>ثبت مسیر</h2>
+<h2>Registering routes</h2>
 <pre><code>use App\Controllers\PostController;
 use Lite\Routing\Router;
 
@@ -28,27 +28,27 @@ return static function (Router $router): void {
     $router-&gt;get('/posts/{id}', [PostController::class, 'show']);
 };</code></pre>
 
-<h2>متدها</h2>
+<h2>Methods</h2>
 <ul>
     <li><code>get</code> <code>post</code> <code>put</code> <code>patch</code> <code>delete</code> <code>any</code></li>
-    <li>پارامتر مسیر: <code>{id}</code> به آرگومان هم‌نام متد کنترلر تزریق می‌شود</li>
-    <li>نام مسیر: <code>-&gt;name('posts.show')</code></li>
+    <li>Path parameters: <code>{id}</code> is injected into the matching controller argument</li>
+    <li>Named routes: <code>-&gt;name('posts.show')</code></li>
 </ul>
 
-<h2>گروه</h2>
+<h2>Groups</h2>
 <pre><code>$router-&gt;group(['prefix' =&gt; 'admin', 'middleware' =&gt; AuthMiddleware::class], function (Router $router): void {
     $router-&gt;get('/posts', [PostController::class, 'index']);
 });</code></pre>
 
-<h2>ترتیب مسیرها</h2>
-<p>مسیر ثابت را قبل از پارامتردار بگذارید. وگرنه <code>/posts/create</code> ممکن است با <code>/posts/{id}</code> قاطی شود و <code>create</code> به‌عنوان id خوانده شود.</p>
+<h2>Route order</h2>
+<p>Register static paths before parameterized ones. Otherwise <code>/posts/create</code> can match <code>/posts/{id}</code> and treat <code>create</code> as an id.</p>
 
-<h2>Closure</h2>
+<h2>Closures</h2>
 <pre><code>$router-&gt;get('/health', function () {
     return json(['ok' =&gt; true]);
 });</code></pre>
             <nav class="pager">
-                <a href="architecture.html">→ معماری</a><a href="controllers.html">کنترلر ←</a>
+                <a href="architecture.html">← Architecture</a><a href="controllers.html">Controllers →</a>
             </nav>
         </main>
     </div>

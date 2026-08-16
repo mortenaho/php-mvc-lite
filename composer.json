@@ -2,7 +2,26 @@
     "name": "phpmvc/lite",
     "description": "A lightweight, SOLID PHP MVC framework with Eloquent ORM and Blade views",
     "type": "project",
+    "keywords": [
+        "php",
+        "mvc",
+        "framework",
+        "eloquent",
+        "blade",
+        "lite"
+    ],
+    "homepage": "https://github.com/mortenaho/php-mvc-lite",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Mortenaho",
+            "homepage": "https://mortenaho.ir"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/mortenaho/php-mvc-lite/issues",
+        "source": "https://github.com/mortenaho/php-mvc-lite"
+    },
     "require": {
         "php": "^8.2",
         "illuminate/database": "^12.0",
@@ -26,9 +45,13 @@
         ]
     },
     "scripts": {
-        "serve": "php -S localhost:8000 -t public public/router.php",
-        "post-create-project-cmd": [
+        "serve": "php -S 127.0.0.1:8000 -t public public/router.php",
+        "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php lite key:generate",
+            "@php -r \"file_exists('storage/database/app.sqlite') || touch('storage/database/app.sqlite');\""
         ]
     },
     "config": {

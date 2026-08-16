@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>معماری · Lite MVC</title>
+    <title>Architecture · Lite MVC</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Vazirmatn:wght@400;600;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/docs.css">
 </head>
 <body>
@@ -14,34 +14,34 @@
     <div class="layout">
         <aside class="sidebar" id="sidebar"></aside>
         <main class="content">
-            <p class="eyebrow">هسته</p>
-<h1>معماری</h1>
-<p class="lede">کد اپلیکیشن در <code>app/</code> است و هسته فریم‌ورک در <code>src/</code>. این جدایی یعنی می‌توانید کنترلر و مدل بنویسید بدون دست زدن به Kernel.</p>
+            <p class="eyebrow">Core</p>
+<h1>Architecture</h1>
+<p class="lede">Application code lives in <code>app/</code>. The framework core lives in <code>src/</code>. You can write controllers and models without touching the Kernel.</p>
 
-<h2>ساختار پوشه‌ها</h2>
+<h2>Directory layout</h2>
 <pre><code>app/                 Controllers, Models
-bootstrap/app.php    ساخت Application و ثبت مسیرها
+bootstrap/app.php    Builds the Application and registers routes
 config/              app, database, view
-database/migrations  مهاجرت Eloquent
+database/migrations  Eloquent migrations
 public/              Document root
-resources/views      قالب‌های Blade
-routes/web.php       مسیرهای وب
-src/                 هسته Lite
-storage/             کش، لاگ، سشن، SQLite</code></pre>
+resources/views      Blade templates
+routes/web.php       Web routes
+src/                 Lite core
+storage/             cache, logs, sessions, SQLite</code></pre>
 
-<h2>اصول</h2>
+<h2>Design rules</h2>
 <ul>
-    <li><strong>SRP</strong> — Router فقط مسیر می‌شناسد، ViewFactory فقط قالب، Migrator فقط مهاجرت.</li>
-    <li><strong>DIP</strong> — میدل‌ویر به <code>MiddlewareInterface</code> وابسته است، نه به یک کلاس مشخص.</li>
-    <li><strong>کنترلر نازک</strong> — HTTP و اعتبارسنجی اینجاست؛ منطق داده در مدل Eloquent می‌ماند.</li>
+    <li><strong>SRP</strong> — the Router only matches routes, ViewFactory only renders templates, Migrator only runs migrations.</li>
+    <li><strong>DIP</strong> — middleware depends on <code>MiddlewareInterface</code>, not a concrete class.</li>
+    <li><strong>Thin controllers</strong> — HTTP and validation stay here; data logic stays on Eloquent models.</li>
 </ul>
 
 <h2>Container</h2>
-<p>کلاس <code>Lite\Container\Container</code> قرارداد PSR-11 را پیاده می‌کند و با Reflection وابستگی سازنده را می‌سازد. کنترلر با <code>__construct(Session $session)</code> سشن را می‌گیرد؛ Kernel آن را <code>make</code> می‌کند.</p>
+<p><code>Lite\Container\Container</code> implements PSR-11 and builds constructor dependencies with Reflection. A controller can type-hint <code>__construct(Session $session)</code>; the Kernel <code>make</code>s it.</p>
 <pre><code>$app-&gt;make(PostController::class);</code></pre>
 
-<h2>کمک‌تابع‌ها</h2>
-<p>از <code>src/Support/helpers.php</code> در همه جا در دسترس‌اند:</p>
+<h2>Helpers</h2>
+<p>These are always available from <code>src/Support/helpers.php</code>:</p>
 <ul>
     <li><code>app()</code> / <code>config()</code> / <code>env()</code></li>
     <li><code>view()</code> / <code>json()</code> / <code>redirect()</code></li>
@@ -49,7 +49,7 @@ storage/             کش، لاگ، سشن، SQLite</code></pre>
     <li><code>csrf_token()</code> / <code>csrf_field()</code> / <code>old()</code> / <code>error()</code></li>
 </ul>
             <nav class="pager">
-                <a href="tutorial.html">→ آموزش عملی</a><a href="routing.html">مسیریابی ←</a>
+                <a href="tutorial.html">← Tutorial</a><a href="routing.html">Routing →</a>
             </nav>
         </main>
     </div>

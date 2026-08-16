@@ -24,6 +24,7 @@ final class Kernel
 
         return match ($command) {
             'serve' => $this->serve($arguments),
+            'key:generate' => $this->generateKey(),
             'migrate' => $this->migrate(),
             'migrate:rollback' => $this->rollback(),
             'migrate:fresh' => $this->fresh(),
@@ -66,6 +67,46 @@ final class Kernel
         ), $code);
 
         return (int) $code;
+    }
+
+    private function generateKey(): int
+    {
+        $envPath = $this->app->basePath('.env');
+
+        if (! is_file($envPath)) {
+            $example = $this->app->basePath('.env.example');
+
+            if (! is_file($example)) {
+                fwrite(STDERR, ".env.example not found.\n");
+                return 1;
+            }
+
+            copy($example, $envPath);
+        }
+
+        $env = file_get_contents($envPath);
+
+        if ($env === false) {
+            fwrite(STDERR, "Unable to read .env.\n");
+            return 1;
+        }
+
+        $key = 'base64:' . base64_encode(random_bytes(32));
+
+        if (preg_match('/^APP_KEY=.*$/m', $env) === 1) {
+            $env = preg_replace('/^APP_KEY=.*$/m', 'APP_KEY=' . $key, $env, 1) ?? $env;
+        } else {
+            $env .= (str_ends_with($env, "\n") ? '' : "\n") . 'APP_KEY=' . $key . "\n";
+        }
+
+        if (file_put_contents($envPath, $env) === false) {
+            fwrite(STDERR, "Unable to write APP_KEY to .env.\n");
+            return 1;
+        }
+
+        fwrite(STDOUT, "Application key set successfully.\n");
+
+        return 0;
     }
 
     private function migrate(): int
@@ -221,6 +262,7 @@ Usage:
 
 Commands:
   serve [--host=127.0.0.1] [--port=8000]
+  key:generate
   migrate
   migrate:rollback
   migrate:fresh

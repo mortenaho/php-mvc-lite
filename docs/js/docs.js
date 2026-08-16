@@ -1,28 +1,28 @@
 const NAV = [
     {
-        title: 'شروع',
+        title: 'Start',
         items: [
-            { href: 'index.html', label: 'معرفی' },
-            { href: 'install.html', label: 'نصب و راه‌اندازی' },
-            { href: 'tutorial.html', label: 'آموزش عملی' },
+            { href: 'index.html', label: 'Introduction' },
+            { href: 'install.html', label: 'Install' },
+            { href: 'tutorial.html', label: 'Tutorial' },
         ],
     },
     {
-        title: 'هسته',
+        title: 'Core',
         items: [
-            { href: 'architecture.html', label: 'معماری' },
-            { href: 'routing.html', label: 'مسیریابی' },
-            { href: 'controllers.html', label: 'کنترلر و HTTP' },
-            { href: 'middleware.html', label: 'میدل‌ویر' },
+            { href: 'architecture.html', label: 'Architecture' },
+            { href: 'routing.html', label: 'Routing' },
+            { href: 'controllers.html', label: 'Controllers & HTTP' },
+            { href: 'middleware.html', label: 'Middleware' },
         ],
     },
     {
-        title: 'لایه‌ها',
+        title: 'Layers',
         items: [
-            { href: 'models.html', label: 'مدل و دیتابیس' },
-            { href: 'views.html', label: 'Blade و ویو' },
-            { href: 'validation.html', label: 'اعتبارسنجی' },
-            { href: 'cli.html', label: 'خط فرمان' },
+            { href: 'models.html', label: 'Models & database' },
+            { href: 'views.html', label: 'Blade & views' },
+            { href: 'validation.html', label: 'Validation' },
+            { href: 'cli.html', label: 'CLI' },
         ],
     },
 ];
@@ -43,13 +43,13 @@ function renderChrome() {
                 <span class="brand-mark">L</span>
                 <span>
                     <strong>Lite MVC</strong>
-                    <small>مستندات فریم‌ورک</small>
+                    <small>Framework docs</small>
                 </span>
             </a>
             <div class="top-links">
-                <button class="menu-btn" type="button" data-toggle-nav>فهرست</button>
-                <a href="https://github.com/mortenaho/php-mvc-lite">گیت‌هاب</a>
-                <a class="cta" href="install.html">شروع سریع</a>
+                <button class="menu-btn" type="button" data-toggle-nav>Menu</button>
+                <a href="https://github.com/mortenaho/php-mvc-lite">GitHub</a>
+                <a class="cta" href="install.html">Quick start</a>
             </div>
         `;
     }
