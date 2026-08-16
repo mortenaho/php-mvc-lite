@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>میدل‌ویر · Lite MVC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Vazirmatn:wght@400;600;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/docs.css">
+</head>
+<body>
+    <header class="topbar" id="topbar"></header>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar"></aside>
+        <main class="content">
+            <p class="eyebrow">هسته</p>
+<h1>میدل‌ویر</h1>
+<p>هر درخواست از یک Pipeline رد می‌شود. میدل‌ویر سراسری در <code>config/app.php</code> است:</p>
+<pre><code>'middleware' =&gt; [
+    Lite\Middleware\StartSession::class,
+    Lite\Middleware\VerifyCsrfToken::class,
+],</code></pre>
+
+<h2>نوشتن میدل‌ویر</h2>
+<pre><code>namespace App\Middleware;
+
+use Closure;
+use Lite\Http\Request;
+use Lite\Http\Response;
+use Lite\Middleware\MiddlewareInterface;
+
+final class RequireJson implements MiddlewareInterface
+{
+    public function handle(Request $request, Closure $next): Response
+    {
+        if (! $request-&gt;wantsJson()) {
+            return Response::json(['message' =&gt; 'JSON only'], 406);
+        }
+
+        return $next($request);
+    }
+}</code></pre>
+<p>بعد آن را روی گروه مسیر بگذارید:</p>
+<pre><code>$router-&gt;group(['middleware' =&gt; RequireJson::class], function (Router $router): void {
+    $router-&gt;get('/api/posts', [PostController::class, 'index']);
+});</code></pre>
+
+<h2>سشن و CSRF</h2>
+<ul>
+    <li><code>StartSession</code> سشن را باز می‌کند و flash را یک درخواست جلو می‌برد.</li>
+    <li><code>VerifyCsrfToken</code> روی GET/HEAD/OPTIONS کار نمی‌کند. برای POST باید فیلد <code>_token</code> یا هدر <code>X-CSRF-TOKEN</code> باشد.</li>
+</ul>
+            <nav class="pager">
+                <a href="controllers.html">→ کنترلر</a><a href="models.html">مدل ←</a>
+            </nav>
+        </main>
+    </div>
+    <script src="js/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>خط فرمان · Lite MVC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Vazirmatn:wght@400;600;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/docs.css">
+</head>
+<body>
+    <header class="topbar" id="topbar"></header>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar"></aside>
+        <main class="content">
+            <p class="eyebrow">لایه‌ها</p>
+<h1>خط فرمان</h1>
+<p>ورود CLI فایل <code>lite</code> در ریشه پروژه است.</p>
+<pre><code>php lite help</code></pre>
+
+<h2>دستورها</h2>
+<pre><code>php lite serve [--host=127.0.0.1] [--port=8000]
+php lite migrate
+php lite migrate:rollback
+php lite migrate:fresh
+php lite make:controller PostController
+php lite make:model Post
+php lite routes</code></pre>
+
+<p><code>migrate:fresh</code> همه جدول‌ها را حذف می‌کند و مهاجرت‌ها را از نو اجرا می‌کند. برای محیط توسعه است، نه production.</p>
+            <nav class="pager">
+                <a href="validation.html">→ اعتبارسنجی</a>
+            </nav>
+        </main>
+    </div>
+    <script src="js/docs.js"></script>
+</body>
+</html>

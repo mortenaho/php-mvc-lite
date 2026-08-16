@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>معماری · Lite MVC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Vazirmatn:wght@400;600;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/docs.css">
+</head>
+<body>
+    <header class="topbar" id="topbar"></header>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar"></aside>
+        <main class="content">
+            <p class="eyebrow">هسته</p>
+<h1>معماری</h1>
+<p class="lede">کد اپلیکیشن در <code>app/</code> است و هسته فریم‌ورک در <code>src/</code>. این جدایی یعنی می‌توانید کنترلر و مدل بنویسید بدون دست زدن به Kernel.</p>
+
+<h2>ساختار پوشه‌ها</h2>
+<pre><code>app/                 Controllers, Models
+bootstrap/app.php    ساخت Application و ثبت مسیرها
+config/              app, database, view
+database/migrations  مهاجرت Eloquent
+public/              Document root
+resources/views      قالب‌های Blade
+routes/web.php       مسیرهای وب
+src/                 هسته Lite
+storage/             کش، لاگ، سشن، SQLite</code></pre>
+
+<h2>اصول</h2>
+<ul>
+    <li><strong>SRP</strong> — Router فقط مسیر می‌شناسد، ViewFactory فقط قالب، Migrator فقط مهاجرت.</li>
+    <li><strong>DIP</strong> — میدل‌ویر به <code>MiddlewareInterface</code> وابسته است، نه به یک کلاس مشخص.</li>
+    <li><strong>کنترلر نازک</strong> — HTTP و اعتبارسنجی اینجاست؛ منطق داده در مدل Eloquent می‌ماند.</li>
+</ul>
+
+<h2>Container</h2>
+<p>کلاس <code>Lite\Container\Container</code> قرارداد PSR-11 را پیاده می‌کند و با Reflection وابستگی سازنده را می‌سازد. کنترلر با <code>__construct(Session $session)</code> سشن را می‌گیرد؛ Kernel آن را <code>make</code> می‌کند.</p>
+<pre><code>$app-&gt;make(PostController::class);</code></pre>
+
+<h2>کمک‌تابع‌ها</h2>
+<p>از <code>src/Support/helpers.php</code> در همه جا در دسترس‌اند:</p>
+<ul>
+    <li><code>app()</code> / <code>config()</code> / <code>env()</code></li>
+    <li><code>view()</code> / <code>json()</code> / <code>redirect()</code></li>
+    <li><code>url()</code> / <code>asset()</code></li>
+    <li><code>csrf_token()</code> / <code>csrf_field()</code> / <code>old()</code> / <code>error()</code></li>
+</ul>
+            <nav class="pager">
+                <a href="tutorial.html">→ آموزش عملی</a><a href="routing.html">مسیریابی ←</a>
+            </nav>
+        </main>
+    </div>
+    <script src="js/docs.js"></script>
+</body>
+</html>

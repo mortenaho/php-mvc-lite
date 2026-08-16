@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>مدل و دیتابیس · Lite MVC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Vazirmatn:wght@400;600;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/docs.css">
+</head>
+<body>
+    <header class="topbar" id="topbar"></header>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar"></aside>
+        <main class="content">
+            <p class="eyebrow">لایه‌ها</p>
+<h1>مدل و دیتابیس</h1>
+<p>لایه داده <strong>Illuminate Database</strong> است؛ همان Eloquent لاراول، بدون خود فریم‌ورک.</p>
+
+<h2>مدل</h2>
+<pre><code>namespace App\Models;
+
+final class Post extends Model
+{
+    protected $fillable = ['title', 'excerpt', 'body'];
+}</code></pre>
+<pre><code>Post::query()-&gt;latest()-&gt;get();
+Post::query()-&gt;find($id);
+Post::query()-&gt;create($data);
+$post-&gt;update($data);
+$post-&gt;delete();</code></pre>
+
+<h2>مهاجرت</h2>
+<p>هر فایل در <code>database/migrations</code> باید یک شیء با <code>up</code> و <code>down</code> برگرداند.</p>
+<pre><code>public function up(Capsule $db): void
+{
+    $db-&gt;schema()-&gt;create('posts', function (Blueprint $table): void {
+        $table-&gt;id();
+        $table-&gt;string('title');
+        $table-&gt;timestamps();
+    });
+}</code></pre>
+<pre><code>php lite migrate
+php lite migrate:rollback
+php lite migrate:fresh</code></pre>
+
+<h2>اتصال</h2>
+<p>تنظیمات در <code>config/database.php</code> و مقدار <code>DB_CONNECTION</code> در <code>.env</code> است. SQLite، MySQL و Postgres آماده‌اند.</p>
+            <nav class="pager">
+                <a href="middleware.html">→ میدل‌ویر</a><a href="views.html">Blade ←</a>
+            </nav>
+        </main>
+    </div>
+    <script src="js/docs.js"></script>
+</body>
+</html>

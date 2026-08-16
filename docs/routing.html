@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>مسیریابی · Lite MVC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Vazirmatn:wght@400;600;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/docs.css">
+</head>
+<body>
+    <header class="topbar" id="topbar"></header>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar"></aside>
+        <main class="content">
+            <p class="eyebrow">هسته</p>
+<h1>مسیریابی</h1>
+<p>مسیرها در <code>routes/web.php</code> ثبت می‌شوند. موتور تطبیق <strong>FastRoute</strong> است.</p>
+
+<h2>ثبت مسیر</h2>
+<pre><code>use App\Controllers\PostController;
+use Lite\Routing\Router;
+
+return static function (Router $router): void {
+    $router-&gt;get('/', [HomeController::class, 'index'])-&gt;name('home');
+    $router-&gt;post('/posts', [PostController::class, 'store']);
+    $router-&gt;get('/posts/{id}', [PostController::class, 'show']);
+};</code></pre>
+
+<h2>متدها</h2>
+<ul>
+    <li><code>get</code> <code>post</code> <code>put</code> <code>patch</code> <code>delete</code> <code>any</code></li>
+    <li>پارامتر مسیر: <code>{id}</code> به آرگومان هم‌نام متد کنترلر تزریق می‌شود</li>
+    <li>نام مسیر: <code>-&gt;name('posts.show')</code></li>
+</ul>
+
+<h2>گروه</h2>
+<pre><code>$router-&gt;group(['prefix' =&gt; 'admin', 'middleware' =&gt; AuthMiddleware::class], function (Router $router): void {
+    $router-&gt;get('/posts', [PostController::class, 'index']);
+});</code></pre>
+
+<h2>ترتیب مسیرها</h2>
+<p>مسیر ثابت را قبل از پارامتردار بگذارید. وگرنه <code>/posts/create</code> ممکن است با <code>/posts/{id}</code> قاطی شود و <code>create</code> به‌عنوان id خوانده شود.</p>
+
+<h2>Closure</h2>
+<pre><code>$router-&gt;get('/health', function () {
+    return json(['ok' =&gt; true]);
+});</code></pre>
+            <nav class="pager">
+                <a href="architecture.html">→ معماری</a><a href="controllers.html">کنترلر ←</a>
+            </nav>
+        </main>
+    </div>
+    <script src="js/docs.js"></script>
+</body>
+</html>

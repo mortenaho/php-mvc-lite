@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>اعتبارسنجی · Lite MVC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Vazirmatn:wght@400;600;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/docs.css">
+</head>
+<body>
+    <header class="topbar" id="topbar"></header>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar"></aside>
+        <main class="content">
+            <p class="eyebrow">لایه‌ها</p>
+<h1>اعتبارسنجی</h1>
+<p>از کنترلر:</p>
+<pre><code>$data = $this-&gt;validate($request, [
+    'title' =&gt; 'required|min:3|max:180',
+    'email' =&gt; 'nullable|email',
+    'body' =&gt; 'required|min:20',
+]);</code></pre>
+
+<p>اگر داده نامعتبر باشد <code>ValidationException</code> پرتاب می‌شود:</p>
+<ul>
+    <li>درخواست JSON → پاسخ ۴۲۲ با کلید <code>errors</code></li>
+    <li>فرم HTML → redirect به Referer با flash از <code>errors</code> و <code>old</code></li>
+</ul>
+
+<h2>قوانین</h2>
+<ul>
+    <li><code>required</code></li>
+    <li><code>nullable</code></li>
+    <li><code>email</code></li>
+    <li><code>min:n</code> / <code>max:n</code> — برای رشته طول، برای عدد مقدار</li>
+    <li><code>integer</code> / <code>numeric</code></li>
+</ul>
+
+<h2>نمایش خطا در Blade</h2>
+<pre><code>&lt;input name="title" value="{{ old('title') }}"&gt;
+@if(error('title'))
+    &lt;small&gt;{{ error('title') }}&lt;/small&gt;
+@endif</code></pre>
+            <nav class="pager">
+                <a href="views.html">→ Blade</a><a href="cli.html">CLI ←</a>
+            </nav>
+        </main>
+    </div>
+    <script src="js/docs.js"></script>
+</body>
+</html>

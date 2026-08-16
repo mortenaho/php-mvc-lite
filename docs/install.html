@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>نصب و راه‌اندازی · Lite MVC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Vazirmatn:wght@400;600;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/docs.css">
+</head>
+<body>
+    <header class="topbar" id="topbar"></header>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar"></aside>
+        <main class="content">
+            <p class="eyebrow">شروع</p>
+<h1>نصب و راه‌اندازی</h1>
+<p class="lede">پیش‌نیاز: PHP 8.2 به‌بعد با PDO SQLite یا MySQL، و Composer.</p>
+
+<h2>۱. کلون و وابستگی‌ها</h2>
+<pre><code>git clone git@github.com:mortenaho/php-mvc-lite.git
+cd php-mvc-lite
+composer install
+cp .env.example .env</code></pre>
+
+<h2>۲. مهاجرت</h2>
+<p>پیش‌فرض SQLite است و فایل دیتابیس در <code>storage/database/app.sqlite</code> ساخته می‌شود.</p>
+<pre><code>php lite migrate</code></pre>
+
+<h2>۳. سرور توسعه</h2>
+<pre><code>php lite serve</code></pre>
+<p>مرورگر را روی <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a> باز کنید. پورت را می‌توانید عوض کنید:</p>
+<pre><code>php lite serve --port=8080</code></pre>
+
+<h2>Apache</h2>
+<p>Document Root را روی پوشه <code>public</code> بگذارید. فایل <code>public/.htaccess</code> همه مسیرها را به Front Controller می‌فرستد.</p>
+
+<h2>MySQL</h2>
+<p>در <code>.env</code>:</p>
+<pre><code>DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=lite
+DB_USERNAME=root
+DB_PASSWORD=secret</code></pre>
+<p>سپس دوباره <code>php lite migrate</code>.</p>
+
+<div class="note">در production مقدار <code>APP_DEBUG=false</code> بگذارید تا جزئیات خطا نشان داده نشود و Blade قالب را کش کند.</div>
+            <nav class="pager">
+                <a href="index.html">→ معرفی</a><a href="tutorial.html">آموزش عملی ←</a>
+            </nav>
+        </main>
+    </div>
+    <script src="js/docs.js"></script>
+</body>
+</html>

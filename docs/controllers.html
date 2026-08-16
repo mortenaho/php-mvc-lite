@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>کنترلر و HTTP · Lite MVC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Vazirmatn:wght@400;600;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/docs.css">
+</head>
+<body>
+    <header class="topbar" id="topbar"></header>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar"></aside>
+        <main class="content">
+            <p class="eyebrow">هسته</p>
+<h1>کنترلر و HTTP</h1>
+<p>کنترلرها از <code>Lite\Http\Controller</code> ارث می‌برند و پاسخ <code>Response</code> برمی‌گردانند.</p>
+
+<h2>پاسخ‌ها</h2>
+<pre><code>$this-&gt;view('posts.show', ['post' =&gt; $post]);
+$this-&gt;json(['id' =&gt; $post-&gt;id]);
+$this-&gt;redirect('/posts');</code></pre>
+
+<h2>Request</h2>
+<p>اگر متد کنترلر <code>Request $request</code> بخواهد، Kernel آن را تزریق می‌کند.</p>
+<ul>
+    <li><code>method()</code> <code>path()</code> <code>url()</code></li>
+    <li><code>input('title')</code> <code>all()</code> <code>only(['title', 'body'])</code></li>
+    <li><code>header('Accept')</code> <code>wantsJson()</code> <code>isJson()</code></li>
+</ul>
+<p>بدنه JSON اگر <code>Content-Type: application/json</code> باشد با <code>input()</code> خوانده می‌شود.</p>
+
+<h2>خطاهای HTTP</h2>
+<pre><code>use Lite\Exceptions\HttpException;
+
+throw HttpException::notFound('نوشته پیدا نشد.');
+throw HttpException::forbidden('CSRF token mismatch.');</code></pre>
+<p>اگر درخواست JSON بخواهد، پاسخ JSON است؛ وگرنه قالب <code>errors.404</code> یا <code>errors.500</code>.</p>
+            <nav class="pager">
+                <a href="routing.html">→ مسیریابی</a><a href="middleware.html">میدل‌ویر ←</a>
+            </nav>
+        </main>
+    </div>
+    <script src="js/docs.js"></script>
+</body>
+</html>

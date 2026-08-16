@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Blade و ویو · Lite MVC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Vazirmatn:wght@400;600;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/docs.css">
+</head>
+<body>
+    <header class="topbar" id="topbar"></header>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar"></aside>
+        <main class="content">
+            <p class="eyebrow">لایه‌ها</p>
+<h1>Blade و ویو</h1>
+<p>موتور قالب <code>illuminate/view</code> است. نام ویو نقطه‌ای است: <code>posts.show</code> یعنی <code>resources/views/posts/show.blade.php</code>.</p>
+
+<h2>لایه و بخش</h2>
+<pre><code>@extends('layouts.app')
+
+@section('content')
+    &lt;h1&gt;{{ $post-&gt;title }}&lt;/h1&gt;
+    {!! nl2br(e($post-&gt;body)) !!}
+@endsection</code></pre>
+
+<h2>امنیت</h2>
+<ul>
+    <li><code>{{ $value }}</code> همیشه escape می‌شود.</li>
+    <li><code>{!! $html !!}</code> خام است؛ فقط وقتی محتوا را خودتان ساخته‌اید استفاده کنید.</li>
+    <li>در فرم‌ها <code>@csrf</code> بگذارید.</li>
+</ul>
+
+<h2>داده مشترک</h2>
+<p>در همه قالب‌ها این‌ها موجودند: <code>$app_name</code>، <code>$app_debug</code>، <code>$csrf_token</code>، <code>$flash</code>، <code>$errors</code>.</p>
+
+<h2>توابع کمکی داخل قالب</h2>
+<pre><code>{{ url('/posts') }}
+{{ asset('css/app.css') }}
+{{ old('title', $post-&gt;title ?? '') }}
+{{ error('title') }}
+@csrf</code></pre>
+
+<div class="note">قالب‌های کامپایل‌شده در <code>storage/cache/blade</code> ذخیره می‌شوند.</div>
+            <nav class="pager">
+                <a href="models.html">→ مدل</a><a href="validation.html">اعتبارسنجی ←</a>
+            </nav>
+        </main>
+    </div>
+    <script src="js/docs.js"></script>
+</body>
+</html>
