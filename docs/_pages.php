@@ -48,7 +48,6 @@ return [
 
 <h2>What is not in the core</h2>
 <ul>
-    <li>Ready-made auth — build it with sessions and a User model</li>
     <li>Queues and jobs — omitted on purpose to stay light</li>
     <li>A hand-rolled ORM — Eloquent is used instead</li>
 </ul>
@@ -235,6 +234,7 @@ storage/             cache, logs, sessions, SQLite</code></pre>
     <li><code>view()</code> / <code>json()</code> / <code>redirect()</code></li>
     <li><code>url()</code> / <code>asset()</code></li>
     <li><code>csrf_token()</code> / <code>csrf_field()</code> / <code>old()</code> / <code>error()</code></li>
+    <li><code>auth()</code> / <code>can()</code> / <code>cannot()</code> / <code>authorize()</code></li>
 </ul>
 HTML,
     ],
@@ -423,14 +423,17 @@ HTML,
 </ul>
 
 <h2>Shared data</h2>
-<p>Every template receives <code>$app_name</code>, <code>$app_debug</code>, <code>$csrf_token</code>, <code>$flash</code>, and <code>$errors</code>.</p>
+<p>Every template receives <code>$app_name</code>, <code>$app_debug</code>, <code>$csrf_token</code>, <code>$flash</code>, <code>$errors</code>, and <code>$user</code>.</p>
 
 <h2>Helpers in templates</h2>
 <pre><code>{{ url('/posts') }}
 {{ asset('css/app.css') }}
 {{ old('title', $post-&gt;title ?? '') }}
 {{ error('title') }}
-@csrf</code></pre>
+@csrf
+@can('update', $post)
+    &lt;a href="{{ url('/posts/' . $post-&gt;id . '/edit') }}"&gt;Edit&lt;/a&gt;
+@endcan</code></pre>
 
 <div class="note">Compiled templates are stored in <code>storage/cache/blade</code>.</div>
 HTML,
@@ -439,7 +442,7 @@ HTML,
     'validation.html' => [
         'title' => 'Validation',
         'prev' => ['views.html', 'Blade'],
-        'next' => ['cli.html', 'CLI'],
+        'next' => ['auth.html', 'Auth'],
         'content' => <<<'HTML'
 <p class="eyebrow">Layers</p>
 <h1>Validation</h1>
@@ -463,6 +466,8 @@ HTML,
     <li><code>email</code></li>
     <li><code>min:n</code> / <code>max:n</code> — length for strings, value for numbers</li>
     <li><code>integer</code> / <code>numeric</code></li>
+    <li><code>confirmed</code> — matches <code>{field}_confirmation</code></li>
+    <li><code>unique:table,column</code></li>
 </ul>
 
 <h2>Showing errors in Blade</h2>
@@ -473,9 +478,89 @@ HTML,
 HTML,
     ],
 
+    'auth.html' => [
+        'title' => 'Authentication',
+        'prev' => ['validation.html', 'Validation'],
+        'next' => ['cli.html', 'CLI'],
+        'content' => <<<'HTML'
+<p class="eyebrow">Layers</p>
+<h1>Authentication and authorization</h1>
+<p class="lede">Session login is built in, plus policies, roles, and Blade <code>@can</code>. Keep policies in <code>app/Policies</code> and map them in <code>config/auth.php</code>.</p>
+
+<h2>Demo accounts</h2>
+<p>After <code>php lite migrate</code>:</p>
+<pre><code>demo@lite.test / password     role: user
+admin@lite.test / password    role: admin</code></pre>
+<p>Admins can edit any post. Regular users can only change their own.</p>
+
+<h2>Routes</h2>
+<pre><code>GET  /login
+POST /login
+GET  /register
+POST /register
+POST /logout      (auth)
+GET  /account     (auth)</code></pre>
+<p>Creating, editing, and deleting posts requires a logged-in user. The Post policy decides who may update or delete.</p>
+
+<h2>Protecting a route</h2>
+<pre><code>use Lite\Middleware\Authenticate;
+use Lite\Middleware\EnsureRole;
+use Lite\Middleware\RedirectIfAuthenticated;
+
+$router-&gt;group(['middleware' =&gt; Authenticate::class], function (Router $router): void {
+    $router-&gt;get('/account', [AccountController::class, 'show']);
+});
+
+$router-&gt;group(['middleware' =&gt; [Authenticate::class, EnsureRole::class . ':admin']], function (Router $router): void {
+    $router-&gt;get('/admin', [AdminController::class, 'index']);
+});</code></pre>
+<p><code>EnsureRole:admin,editor</code> allows any of the listed roles.</p>
+
+<h2>Policies</h2>
+<pre><code>php lite make:policy PostPolicy</code></pre>
+<p>Register the class in <code>config/auth.php</code>:</p>
+<pre><code>'policies' =&gt; [
+    App\Models\Post::class =&gt; App\Policies\PostPolicy::class,
+],</code></pre>
+<pre><code>final class PostPolicy
+{
+    public function before(?User $user, string $ability): ?bool
+    {
+        return $user?-&gt;isAdmin() ? true : null;
+    }
+
+    public function update(User $user, Post $post): bool
+    {
+        return (string) $user-&gt;id === (string) $post-&gt;user_id;
+    }
+}</code></pre>
+<p>Return <code>null</code> from <code>before</code> to fall through to the ability method. <code>true</code> allows, <code>false</code> denies.</p>
+
+<h2>In controllers and views</h2>
+<pre><code>auth()-&gt;check();
+auth()-&gt;hasRole('admin');
+auth()-&gt;isAdmin();
+
+$this-&gt;authorize('update', $post);
+can('update', $post);</code></pre>
+<pre><code>@can('update', $post)
+    &lt;a href="{{ url('/posts/' . $post-&gt;id . '/edit') }}"&gt;Edit&lt;/a&gt;
+@endcan</code></pre>
+<p>Pass a model instance for <code>update</code>/<code>delete</code>, or the class name for <code>create</code>: <code>authorize('create', Post::class)</code>.</p>
+<p>Custom abilities without a policy:</p>
+<pre><code>gate()-&gt;define('access-reports', fn ($user) =&gt; $user?-&gt;hasRole('admin'));</code></pre>
+
+<h2>Roles</h2>
+<p>Users have a string <code>role</code> column. The User model uses <code>Lite\Auth\HasRoles</code>. <code>role</code> is not mass-assignable, so registration cannot create an admin.</p>
+<pre><code>$user-&gt;hasRole('admin');
+$user-&gt;isAdmin();</code></pre>
+<p>Passwords are hashed with <code>password_hash</code>. Login regenerates the session id. CSRF is still required on POST.</p>
+HTML,
+    ],
+
     'cli.html' => [
         'title' => 'CLI',
-        'prev' => ['validation.html', 'Validation'],
+        'prev' => ['auth.html', 'Auth'],
         'content' => <<<'HTML'
 <p class="eyebrow">Layers</p>
 <h1>Command line</h1>
@@ -490,6 +575,7 @@ php lite migrate:rollback
 php lite migrate:fresh
 php lite make:controller PostController
 php lite make:model Post
+php lite make:policy PostPolicy
 php lite routes</code></pre>
 
 <p><code>migrate:fresh</code> drops every table and re-runs migrations. Use it in development, not in production.</p>

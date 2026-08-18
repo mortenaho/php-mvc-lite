@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Lite;
 
 use Dotenv\Dotenv;
+use Lite\Auth\Auth;
+use Lite\Auth\Gate;
 use Lite\Container\Container;
 use Lite\Database\DatabaseManager;
 use Lite\Exceptions\Handler;
@@ -116,6 +118,25 @@ final class Application
     private function registerCoreServices(): void
     {
         $this->container->singleton(Session::class, fn () => new Session());
+        $this->container->singleton(Auth::class, fn (Container $container) => new Auth(
+            $container->get(Session::class),
+            $container->get(Config::class),
+        ));
+        $this->container->singleton(Gate::class, function (Container $container): Gate {
+            $gate = new Gate(
+                $container->get(Auth::class),
+                $container,
+            );
+
+            /** @var Config $config */
+            $config = $container->get(Config::class);
+
+            foreach ($config->get('auth.policies', []) as $model => $policy) {
+                $gate->policy((string) $model, (string) $policy);
+            }
+
+            return $gate;
+        });
         $this->container->singleton(Router::class, fn () => new Router());
         $this->container->singleton(ViewFactory::class, fn (Container $container) => ViewFactory::create($container));
         $this->container->singleton(DatabaseManager::class, fn (Container $container) => new DatabaseManager($container->get(Config::class)));

@@ -174,3 +174,45 @@ if (! function_exists('error')) {
         return is_array($messages) ? (string) ($messages[0] ?? '') : (string) $messages;
     }
 }
+
+if (! function_exists('auth')) {
+    function auth(): \Lite\Auth\Auth
+    {
+        return app(\Lite\Auth\Auth::class);
+    }
+}
+
+if (! function_exists('user')) {
+    function user(): ?\Illuminate\Database\Eloquent\Model
+    {
+        return auth()->user();
+    }
+}
+
+if (! function_exists('gate')) {
+    function gate(): \Lite\Auth\Gate
+    {
+        return app(\Lite\Auth\Gate::class);
+    }
+}
+
+if (! function_exists('can')) {
+    function can(string $ability, mixed $arguments = null): bool
+    {
+        return gate()->allows($ability, $arguments);
+    }
+}
+
+if (! function_exists('cannot')) {
+    function cannot(string $ability, mixed $arguments = null): bool
+    {
+        return gate()->denies($ability, $arguments);
+    }
+}
+
+if (! function_exists('authorize')) {
+    function authorize(string $ability, mixed $arguments = null): void
+    {
+        gate()->authorize($ability, $arguments);
+    }
+}

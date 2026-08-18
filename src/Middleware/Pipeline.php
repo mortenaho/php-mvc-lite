@@ -14,7 +14,7 @@ final class Pipeline
 {
     private Request $request;
 
-    /** @var list<class-string|callable> */
+    /** @var list<class-string|string|callable> */
     private array $pipes = [];
 
     public function __construct(private readonly Container $container)
@@ -29,7 +29,7 @@ final class Pipeline
     }
 
     /**
-     * @param list<class-string|callable> $pipes
+     * @param list<class-string|string|callable> $pipes
      */
     public function through(array $pipes): self
     {
@@ -43,7 +43,7 @@ final class Pipeline
         $pipeline = array_reduce(
             array_reverse($this->pipes),
             fn (Closure $next, mixed $pipe): Closure => function (Request $request) use ($next, $pipe): Response {
-                $middleware = is_callable($pipe) ? $pipe : $this->container->make($pipe);
+                $middleware = $this->resolve($pipe);
 
                 if ($middleware instanceof MiddlewareInterface) {
                     return $middleware->handle($request, $next);
@@ -59,5 +59,24 @@ final class Pipeline
         );
 
         return $pipeline($this->request);
+    }
+
+    private function resolve(mixed $pipe): mixed
+    {
+        if (is_callable($pipe) && ! is_string($pipe)) {
+            return $pipe;
+        }
+
+        if (! is_string($pipe)) {
+            return $this->container->make($pipe);
+        }
+
+        if (! str_contains($pipe, ':')) {
+            return $this->container->make($pipe);
+        }
+
+        [$class, $parameter] = explode(':', $pipe, 2);
+
+        return $this->container->make($class, ['parameter' => $parameter]);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Lite\Http;
 
+use Lite\Auth\Gate;
 use Lite\Http\Request;
 use Lite\Http\Response;
 use Lite\Validation\Validator;
@@ -39,5 +40,15 @@ abstract class Controller
         }
 
         return $validator->validated();
+    }
+
+    protected function authorize(string $ability, mixed $arguments = null): void
+    {
+        app(Gate::class)->authorize($ability, $arguments);
+    }
+
+    protected function can(string $ability, mixed $arguments = null): bool
+    {
+        return app(Gate::class)->allows($ability, $arguments);
     }
 }

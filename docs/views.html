@@ -34,14 +34,17 @@
 </ul>
 
 <h2>Shared data</h2>
-<p>Every template receives <code>$app_name</code>, <code>$app_debug</code>, <code>$csrf_token</code>, <code>$flash</code>, and <code>$errors</code>.</p>
+<p>Every template receives <code>$app_name</code>, <code>$app_debug</code>, <code>$csrf_token</code>, <code>$flash</code>, <code>$errors</code>, and <code>$user</code>.</p>
 
 <h2>Helpers in templates</h2>
 <pre><code>{{ url('/posts') }}
 {{ asset('css/app.css') }}
 {{ old('title', $post-&gt;title ?? '') }}
 {{ error('title') }}
-@csrf</code></pre>
+@csrf
+@can('update', $post)
+    &lt;a href="{{ url('/posts/' . $post-&gt;id . '/edit') }}"&gt;Edit&lt;/a&gt;
+@endcan</code></pre>
 
 <div class="note">Compiled templates are stored in <code>storage/cache/blade</code>.</div>
             <nav class="pager">

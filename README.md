@@ -65,6 +65,16 @@ php lite serve
 
 Then open [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
+Sign in with the seeded user `demo@lite.test` / `password`, or register a new account.
+
+## Authentication
+
+Session auth is included: `/login`, `/register`, `/logout`, `/account`.
+
+Protect routes with `Lite\Middleware\Authenticate`. Guests hitting a protected URL are sent to login. Use `auth()`, `user()`, and `$user` in Blade.
+
+Write operations on posts require login; only the author can edit or delete.
+
 ## Shared hosting
 
 If you can change the document root, point it at `public`.
@@ -81,6 +91,7 @@ php lite migrate:rollback
 php lite migrate:fresh
 php lite make:controller ArticleController
 php lite make:model Article
+php lite make:policy ArticlePolicy
 php lite routes
 ```
 

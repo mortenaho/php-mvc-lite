@@ -18,16 +18,16 @@ return new class {
 
         $db->table('posts')->insert([
             [
-                'title' => 'معماری MVC سبک، بدون اضافات',
-                'excerpt' => 'هسته فریم‌ورک فقط همان چیزی را دارد که برای ساخت یک اپلیکیشن واقعی لازم است: مسیر، کنترلر، مدل و ویو.',
-                'body' => "Lite یک هسته PHP با تزریق وابستگی، پایپ‌لاین میدل‌ویر و Front Controller است.\n\nکنترلرها نازک می‌مانند، مدل‌ها با Eloquent کار می‌کنند و قالب‌ها در Blade کامپایل می‌شوند تا XSS به‌صورت پیش‌فرض بسته باشد.",
+                'title' => 'A small MVC core, without the extras',
+                'excerpt' => 'The framework core only includes what you need to build a real app: routes, controllers, models, and views.',
+                'body' => "Lite is a PHP core with dependency injection, a middleware pipeline, and a front controller.\n\nControllers stay thin, models use Eloquent, and templates compile through Blade so XSS is escaped by default.",
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],
             [
-                'title' => 'Eloquent برای داده، Blade برای نمایش',
-                'excerpt' => 'به‌جای ORM دست‌نویس، از کتابخانه‌های بالغ استفاده شده تا کوئری، رابطه و قالب‌ها قابل اعتماد باشند.',
-                'body' => "لایه داده Illuminate Database است؛ همان Eloquent لاراول، بدون خود فریم‌ورک.\n\nلایه ویو Blade است: وراثت لایه‌ها، @csrf، auto-escape و کش قالب کامپایل‌شده.",
+                'title' => 'Eloquent for data, Blade for display',
+                'excerpt' => 'Instead of a hand-rolled ORM, mature libraries handle queries, relationships, and templates.',
+                'body' => "The data layer is Illuminate Database — Laravel’s Eloquent, without the rest of the framework.\n\nThe view layer is Blade: layouts, @csrf, auto-escape, and compiled template caching.",
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],

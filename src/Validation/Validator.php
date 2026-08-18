@@ -78,6 +78,8 @@ final class Validator
             'integer' => filter_var($value, FILTER_VALIDATE_INT) === false,
             'numeric' => ! is_numeric($value),
             'nullable' => false,
+            'confirmed' => ($this->data[$field . '_confirmation'] ?? null) !== $value,
+            'unique' => $this->uniqueExists($field, $value, $parameter),
             default => false,
         };
 
@@ -97,7 +99,22 @@ final class Validator
             'max' => "The {$label} may not be greater than {$parameter} characters.",
             'integer' => "The {$label} must be an integer.",
             'numeric' => "The {$label} must be a number.",
+            'confirmed' => "The {$label} confirmation does not match.",
+            'unique' => "The {$label} has already been taken.",
             default => "The {$label} is invalid.",
         };
+    }
+
+    private function uniqueExists(string $field, mixed $value, ?string $parameter): bool
+    {
+        if (! is_string($value) || $value === '' || $parameter === null || $parameter === '') {
+            return false;
+        }
+
+        $parts = array_map('trim', explode(',', $parameter));
+        $table = $parts[0];
+        $column = $parts[1] ?? $field;
+
+        return \Illuminate\Database\Capsule\Manager::table($table)->where($column, $value)->exists();
     }
 }

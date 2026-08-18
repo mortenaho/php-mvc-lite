@@ -22,12 +22,12 @@ html, body {
         radial-gradient(circle at 88% 0%, #ead7c2, transparent 32%),
         var(--paper);
     color: var(--ink);
-    font-family: "Vazirmatn", sans-serif;
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
     line-height: 1.7;
 }
 
 h1, h2, h3, .brand-mark {
-    font-family: "Fraunces", "Vazirmatn", serif;
+    font-family: "Fraunces", "IBM Plex Sans", serif;
     letter-spacing: -0.03em;
     line-height: 1.15;
 }
@@ -169,7 +169,28 @@ a { color: inherit; text-decoration: none; }
     font-weight: 700;
 }
 
-.empty { text-align: center; }
+.flash-error {
+    background: #f8e4e6;
+    color: var(--danger);
+}
+
+.auth-panel { max-width: 480px; }
+.auth-switch, .auth-hint { color: var(--muted); font-weight: 500; margin-top: 16px; }
+.auth-switch a { color: var(--terracotta); font-weight: 700; }
+.auth-hint code { display: inline-block; }
+.muted { color: var(--muted); }
+
+.nav form { margin: 0; }
+.nav button {
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+}
+.nav button:hover { color: var(--ink); }
 .debug {
     overflow: auto;
     background: var(--ink);
@@ -177,7 +198,6 @@ a { color: inherit; text-decoration: none; }
     padding: 16px;
     border-radius: 16px;
     text-align: left;
-    direction: ltr;
 }
 
 @media (max-width: 800px) {

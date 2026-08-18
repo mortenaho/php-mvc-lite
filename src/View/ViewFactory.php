@@ -38,6 +38,14 @@ final class ViewFactory
 
         $files = new Filesystem();
         $compiler = new BladeCompiler($files, $cachePath);
+        $compiler->directive('can', static function (?string $expression): string {
+            return '<?php if (can(' . ($expression ?? '') . ')): ?>';
+        });
+        $compiler->directive('endcan', static fn (): string => '<?php endif; ?>');
+        $compiler->directive('cannot', static function (?string $expression): string {
+            return '<?php if (cannot(' . ($expression ?? '') . ')): ?>';
+        });
+        $compiler->directive('endcannot', static fn (): string => '<?php endif; ?>');
 
         $resolver = new EngineResolver();
         $resolver->register('blade', static fn (): CompilerEngine => new CompilerEngine($compiler, $files));
@@ -88,6 +96,7 @@ final class ViewFactory
             'csrf_token' => $this->session->token(),
             'flash' => $flash,
             'errors' => is_array($flash['errors'] ?? null) ? $flash['errors'] : [],
+            'user' => auth()->user(),
         ]);
     }
 

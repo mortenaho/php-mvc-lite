@@ -22,6 +22,7 @@ const NAV = [
             { href: 'models.html', label: 'Models & database' },
             { href: 'views.html', label: 'Blade & views' },
             { href: 'validation.html', label: 'Validation' },
+            { href: 'auth.html', label: 'Authentication' },
             { href: 'cli.html', label: 'CLI' },
         ],
     },

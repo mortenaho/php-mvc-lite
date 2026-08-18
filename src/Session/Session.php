@@ -73,6 +73,17 @@ final class Session
         unset($_SESSION['_flash']);
     }
 
+    public function regenerate(): void
+    {
+        $this->start();
+
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_regenerate_id(true);
+        }
+
+        $this->regenerateToken();
+    }
+
     public function token(): string
     {
         $this->start();

@@ -3,37 +3,41 @@
 @section('content')
 <section class="hero">
     <p class="eyebrow">PHP 8.2 · MVC · OOP</p>
-    <h1>یک هسته کوچک،<br>با ابزارهای درست.</h1>
+    <h1>A small core,<br>with the right tools.</h1>
     <p class="lede">
-        مسیرها با FastRoute، داده با Eloquent، و ویو با Blade کامپایل‌شده.
-        کنترلرها نازک می‌مانند؛ قوانین در سرویس و مدل می‌نشینند.
+        Routes with FastRoute, data with Eloquent, views with compiled Blade.
+        Controllers stay thin; rules live in services and models.
     </p>
     <div class="hero-actions">
-        <a class="btn btn-primary" href="{{ url('/posts') }}">دیدن نوشته‌ها</a>
-        <a class="btn btn-ghost" href="{{ url('/posts/create') }}">ساخت اولین نوشته</a>
+        <a class="btn btn-primary" href="{{ url('/posts') }}">Browse posts</a>
+        @if($user)
+            <a class="btn btn-ghost" href="{{ url('/posts/create') }}">Write a post</a>
+        @else
+            <a class="btn btn-ghost" href="{{ url('/register') }}">Register</a>
+        @endif
     </div>
 </section>
 
 <section class="grid-3">
     <article class="card">
-        <h2>هسته SOLID</h2>
-        <p>Container با autowiring، Kernel، میدل‌ویر و جداسازی HTTP از دامنه.</p>
+        <h2>SOLID core</h2>
+        <p>A container with autowiring, a Kernel, middleware, and a split between HTTP and domain code.</p>
     </article>
     <article class="card">
         <h2>Eloquent ORM</h2>
-        <p>مدل، مهاجرت، Query Builder و رابطه — همان Illuminate Database.</p>
+        <p>Models, migrations, the query builder, and relationships — Illuminate Database.</p>
     </article>
     <article class="card">
         <h2>Blade</h2>
-        <p>وراثت لایه، escape پیش‌فرض، دایرکتیوهای آشنای لاراول و کش قالب کامپایل‌شده.</p>
+        <p>Layouts, escaped output by default, familiar Laravel directives, and compiled template caching.</p>
     </article>
 </section>
 
 @if($posts->isNotEmpty())
 <section class="stack">
     <header class="section-head">
-        <h2>آخرین نوشته‌ها</h2>
-        <a href="{{ url('/posts') }}">همه</a>
+        <h2>Latest posts</h2>
+        <a href="{{ url('/posts') }}">View all</a>
     </header>
     <div class="post-list">
         @foreach($posts as $post)

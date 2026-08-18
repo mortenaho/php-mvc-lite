@@ -30,6 +30,7 @@ final class Kernel
             'migrate:fresh' => $this->fresh(),
             'make:controller' => $this->makeController($arguments[0] ?? null),
             'make:model' => $this->makeModel($arguments[0] ?? null),
+            'make:policy' => $this->makePolicy($arguments[0] ?? null),
             'routes' => $this->routes(),
             'help', '--help', '-h' => $this->help(),
             default => $this->unknown($command),
@@ -232,6 +233,75 @@ PHP;
         return 0;
     }
 
+    private function makePolicy(?string $name): int
+    {
+        if ($name === null || $name === '') {
+            fwrite(STDERR, "Usage: php lite make:policy PostPolicy\n");
+            return 1;
+        }
+
+        $class = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $name)));
+        $class = str_ends_with($class, 'Policy') ? $class : $class . 'Policy';
+        $directory = $this->app->basePath('app/Policies');
+        $path = $directory . '/' . $class . '.php';
+
+        if (is_file($path)) {
+            fwrite(STDERR, "Policy already exists: {$class}\n");
+            return 1;
+        }
+
+        if (! is_dir($directory) && ! mkdir($directory, 0775, true) && ! is_dir($directory)) {
+            fwrite(STDERR, "Unable to create app/Policies.\n");
+            return 1;
+        }
+
+        $model = str_ends_with($class, 'Policy') ? substr($class, 0, -6) : $class;
+
+        $stub = <<<PHP
+<?php
+
+declare(strict_types=1);
+
+namespace App\\Policies;
+
+use App\\Models\\{$model};
+use App\\Models\\User;
+
+final class {$class}
+{
+    public function before(?User \$user, string \$ability): ?bool
+    {
+        if (\$user?->isAdmin()) {
+            return true;
+        }
+
+        return null;
+    }
+
+    public function create(User \$user): bool
+    {
+        return true;
+    }
+
+    public function update(User \$user, {$model} \$model): bool
+    {
+        return (string) \$user->id === (string) \$model->user_id;
+    }
+
+    public function delete(User \$user, {$model} \$model): bool
+    {
+        return \$this->update(\$user, \$model);
+    }
+}
+
+PHP;
+
+        file_put_contents($path, $stub);
+        fwrite(STDOUT, "Created app/Policies/{$class}.php\n");
+
+        return 0;
+    }
+
     private function routes(): int
     {
         /** @var Router $router */
@@ -268,6 +338,7 @@ Commands:
   migrate:fresh
   make:controller Name
   make:model Name
+  make:policy Name
   routes
   help
 
