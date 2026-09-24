@@ -119,7 +119,39 @@ if (! function_exists('url')) {
 if (! function_exists('asset')) {
     function asset(string $path): string
     {
-        return url('assets/' . ltrim($path, '/'));
+        $path = ltrim($path, '/');
+
+        if (! str_starts_with($path, 'assets/')) {
+            $path = 'assets/' . $path;
+        }
+
+        $prefix = trim((string) config('app.asset_prefix', ''), '/');
+
+        return '/' . ($prefix !== '' ? $prefix . '/' : '') . $path;
+    }
+}
+
+if (! function_exists('media_url')) {
+    function media_url(string $path, string $fallbackAsset = ''): string
+    {
+        $path = trim($path);
+
+        if ($path === '') {
+            return $fallbackAsset !== '' ? asset($fallbackAsset) : '';
+        }
+
+        if (preg_match('#^https?://#i', $path) === 1) {
+            return $path;
+        }
+
+        $path = '/' . ltrim($path, '/');
+        $prefix = trim((string) config('app.asset_prefix', ''), '/');
+
+        if ($prefix !== '' && ! str_starts_with($path, '/' . $prefix . '/')) {
+            return '/' . $prefix . $path;
+        }
+
+        return $path;
     }
 }
 

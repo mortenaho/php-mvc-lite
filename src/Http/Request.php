@@ -65,8 +65,18 @@ final class Request
             }
         }
 
-        if (str_contains($script, '/public/index.php') && ($path === '/public' || str_starts_with($path, '/public/'))) {
+        // Hosts that keep the project root as docroot may expose /public/... URLs.
+        if ($path === '/public' || str_starts_with($path, '/public/')) {
             $path = substr($path, strlen('/public')) ?: '/';
+        }
+
+        // PATH_INFO style: /index.php/health-check
+        if (str_starts_with($path, '/index.php/') || $path === '/index.php') {
+            $path = substr($path, strlen('/index.php')) ?: '/';
+        }
+
+        if (str_starts_with($path, '/public/index.php/') || $path === '/public/index.php') {
+            $path = substr($path, strlen('/public/index.php')) ?: '/';
         }
 
         $path = '/' . trim($path, '/');
@@ -178,6 +188,16 @@ final class Request
     public function files(): array
     {
         return $this->files;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function file(string $key): ?array
+    {
+        $file = $this->files[$key] ?? null;
+
+        return is_array($file) ? $file : null;
     }
 
     /**

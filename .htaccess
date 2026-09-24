@@ -1,13 +1,21 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteBase /
 
-    RewriteRule ^(app|bootstrap|config|database|resources|routes|src|storage|vendor)/ - [F,L]
-    RewriteRule ^(\.env|lite|composer\.(json|lock))$ - [F,L]
+    # Block sensitive project paths.
+    RewriteRule ^(app|bootstrap|config|database|resources|routes|src|storage|vendor)(/|$) - [F,L]
+    RewriteRule ^(\.env|lite|composer\.(json|lock)|production\.env)$ - [F,L]
 
-    RewriteRule ^(.*)$ public/$1 [L]
+    # Existing files/directories (including /public/assets/*) are served as-is.
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Everything else goes through the root front controller.
+    RewriteRule ^ index.php [L]
 </IfModule>
 
-DirectoryIndex public/index.php
+DirectoryIndex index.php public/index.php
 
 <IfModule mod_authz_core.c>
     <FilesMatch "^\.env">

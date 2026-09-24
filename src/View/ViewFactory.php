@@ -91,12 +91,17 @@ final class ViewFactory
         $flash = $this->session->allFlash();
 
         $this->factory->share([
-            'app_name' => $this->config->get('app.name', 'Lite MVC'),
+            'app_name' => $this->config->get('app.name', 'ZabbixMonitoring'),
             'app_debug' => (bool) $this->config->get('app.debug', false),
             'csrf_token' => $this->session->token(),
             'flash' => $flash,
             'errors' => is_array($flash['errors'] ?? null) ? $flash['errors'] : [],
             'user' => auth()->user(),
+            'turnstile_enabled' => \App\Support\Turnstile::enabled(),
+            'turnstile_site_key' => \App\Support\Turnstile::siteKey(),
+            'new_leads_count' => auth()->check()
+                ? (int) \App\Models\Lead::query()->where('status', 'new')->count()
+                : 0,
         ]);
     }
 
